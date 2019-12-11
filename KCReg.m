@@ -40,6 +40,8 @@ max_val = max(S);
 global ModelKDE;
 ModelKDE = ComputeKDE(M);
 
+global KCVal;
+
 if(display_it)
     figure
 %     subplot(1,2,1); hold off;
@@ -58,6 +60,7 @@ switch lower(motion)
     case 'euclidean'
         opt = optimset('MaxFunEvals',2000,'MaxIter',2000,'TolFun',1e-5,'TolX',1e-5);
         param = fminsearch('ComputeKC',[0,0,0]',opt);
+        param = [param; KCVal];
     case 'affine'
         opt = optimset('MaxFunEvals',5000,'MaxIter',5000,'TolFun',1e-6,'TolX',1e-10);
         param = fminsearch('ComputeKC',[1 0 0 1 0 0]',opt);        

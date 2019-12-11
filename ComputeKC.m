@@ -7,6 +7,7 @@ global display_it;
 global resolution;
 global x_range;
 global y_range;
+global KCVal;
 
 PT = TransformPoint(param,Scene);
 
