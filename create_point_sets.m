@@ -19,14 +19,20 @@ R = [cos(r) -sin(r); sin(r) cos(r)];
 ptset2 = (R * [ptset1(:,1)-center(1) ptset1(:,2)-center(2)]')';
 ptset2 = ptset2 + shift + center;
 
+% scale noise by the function parameter
 if (with_noise)
-    ptset2 = ptset2 + rand(num_points, 2)*0.4;
+    noise_mat = [];
+    for ii = 1:num_points
+        noise_mat = [noise_mat; [randi([1, with_noise]),  randi([1, with_noise])]];
+    end
+    ptset2 = ptset2 + noise_mat;
 end
 
+% scale outliers by the function parameter
 if (num_outliers > 0)
     outlier_indexes = randi([1, num_points], 1, num_outliers);
     for ii = 1:length(outlier_indexes)
-        ptset2(outlier_indexes(ii), :) = (ptset2(outlier_indexes(ii), :)) + 15;
+        ptset2(outlier_indexes(ii), :) = (ptset2(outlier_indexes(ii), :)) + 15 + num_outliers;
     end
 end
 
