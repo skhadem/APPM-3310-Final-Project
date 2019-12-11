@@ -8,7 +8,7 @@
 %         affine
 %         projective;
 %         Default motion model is euclidean;
-function [param] = KCReg(M,S, h, display,motion);
+function [param] = KCReg(M,S, h, display,motion, x_range, y_range);
 
 if nargin<3;
     disp('Not enough input parameters');
@@ -47,7 +47,7 @@ if(display_it)
     hold on;
     plot(Scene(:,1), Scene(:,2), 'rx')
 %     DisplayPoints(Model,Scene, xlim, ylim);
-    DisplayPoints(Model,Scene, [-5 20], [-15 15]);
+    DisplayPoints(Model,Scene, x_range, y_range);
 %     set(gca,'FontSize',16);
 %     title('Initial setup');
     drawnow;
@@ -56,7 +56,7 @@ end;
 
 switch lower(motion)
     case 'euclidean'
-        opt = optimset('MaxFunEvals',2000,'MaxIter',2000,'TolFun',1e-6,'TolX',1e-8);
+        opt = optimset('MaxFunEvals',2000,'MaxIter',2000,'TolFun',1e-5,'TolX',1e-5);
         param = fminsearch('ComputeKC',[0,0,0]',opt);
     case 'affine'
         opt = optimset('MaxFunEvals',5000,'MaxIter',5000,'TolFun',1e-6,'TolX',1e-10);

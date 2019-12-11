@@ -9,24 +9,24 @@
 close all; clc;
 %%
 % generate k random points
-smiley_pts = load('smiley_points.mat');
-smiley_pts = smiley_pts.smiley_pts;
-% smiley_pts = [];
-[map, pts, rot, shift] = create_point_sets(smiley_pts, 20, 1, ...
-                                    20, 5, 3);
+dog_3d_points = load('dog_3d_points.mat');
+dog_3d_points = dog_3d_points.dog_3d_pts;
+% bunny_pts = [];
+[map, pts, rot, shift] = create_point_sets_3d(dog_3d_points, 10, 1, ...
+                                    20, 5, 0);
 figure;
-plot(map(:,1), map(:,2), 'ko');
+scatter3(map(:,1), map(:,2), map(:,3), 1, 'k.');
 hold;
-plot(pts(:,1), pts(:,2), 'rx');
+scatter3(pts(:,1), pts(:,2), pts(:,3), 1, 'r.');
+grid on;
 title('Point Sets');
 legend('Target Points', 'Data Points');
-grid;
 % xlim([-5 20]);
 % ylim([-15 15]);
-x_range = xlim;
-y_range = ylim;
+% x_range = xlim;
+% y_range = ylim;
 
-%% PCA registration
+%% Least squares registration
 centroid_map = mean(map);
 centroid_pts = mean(pts);
 
@@ -46,19 +46,18 @@ end
 pca_trans = -pca_rot*centroid_map' + centroid_pts';
 pca_trans = pca_trans';
 
-new_pts = pca_rot\(pts - pca_trans)';
-new_pts = new_pts';
+new_pts_pca = pca_rot\(pts - pca_trans)';
+new_pts_pca = new_pts_pca';
 
 figure;
-plot(map(:,1), map(:,2), 'ko');
+scatter3(map(:,1), map(:,2), map(:,3), 1, 'k.');
 hold;
-plot(new_pts(:,1), new_pts(:,2), 'rx');
+scatter3(new_pts_pca(:,1), new_pts_pca(:,2), new_pts_pca(:,3), 1, 'r.');
 title('Least Squares Registration');
 legend('Target Points', 'Data Points');
-xlim(x_range);
-ylim(y_range);
-
-grid;
+% xlim(x_range);
+% ylim(y_range);
+grid on;
 %% run KC algorithm
 % very interesting, the KC algorithm sometimes fails with the smiley
 % points. It seems to be a flip issue but I can't figure out where.
